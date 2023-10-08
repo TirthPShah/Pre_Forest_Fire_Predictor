@@ -12,3 +12,5 @@ Predicts Fire At the User's Location
 ## Steps to run Pre Forest Fire Predictor and Fire Map at your location
 
 Run app.py at local host and provide that path into the firejavascript.js
+
+https://github.com/TirthPShah/Pre_Forest_Fire_Predictor
