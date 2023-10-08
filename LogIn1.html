@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Fire Management Login</title>
+    <link rel="stylesheet" href="LogIn1.css">
+</head>
+
+<body>
+    <style>
+        body {
+            background-image: url('forest.jpg');
+            /* Add your forest image path here */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Adjust the background color opacity */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #131414;
+            /* Customize title color */
+        }
+
+        p {
+            font-size: 18px;
+            color: #333;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Style the hidden data elements */
+        .hidden p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* Style the data values */
+        span {
+            font-weight: bold;
+            color: #000000;
+        }
+
+        /* Style forest fire probability specifically */
+        #forestFireProbability {
+            color: rgb(7, 7, 7);
+            /* Change the color to red for emphasis */
+            font-size: 20px;
+            /* Increase font size */
+        }
+    </style>
+    <div class="background-container">
+        <div class="login-container">
+            <!-- <form action="/FinalFireMap.html" > -->
+            <h1>Forest Fire Management</h1>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <!-- <button type="submit">Login</button> -->
+            <input type="submit" onclick="redirectToFinalFireMap()" value="login">
+            <p>
+                Don't Have A Account<a href="index.html">
+                    Sign Up
+                </a></p>
+                </form>
+        </div>
+    </div>
+
+</body>
+<script>
+    function redirectToFinalFireMap() {
+        window.location.href = "file:///D:/workspace/FinalFireDetectionAtYourLocation.html";
+    }
+</script>
+
+
+</html>
