@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <title>Interactive Forest Globe</title>
+    <style>
+        /* Add styles for the map container */
+        #map {
+            height: 550px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Create a map container -->
+    <div id="map"></div>
+
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 2);
+
+        // Add a base map layer (you can choose other tilesets)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Define the forest locations and their coordinates
+        var forests = [
+            { name: "Amazon Rainforest", latlng: [-3.4653, -62.2159] },
+            { name: "Congo Basin", latlng: [0.7282, 17.5004] },
+            { name: "Borneo Rainforest", latlng: [1.3752, 114.1495] },
+            { name: "Congo Basin", latlng: [0.7282, 17.5004] },
+            { name: "Madagascar Rainforest", latlng: [-19.9275, 46.9222] },
+            { name: "Gola Rainforest", latlng: [7.9389, -11.3881] },
+            { name: "Taita Hills Forest", latlng: [-3.3919, 38.3322] },
+            { name: "Ituri Forest", latlng: [1.6981, 29.1324] },
+            { name: "Bwindi Impenetrable Forest", latlng: [-1.0806, 29.6619] },
+            { name: "Harenna Forest", latlng: [5.9489, 39.2993] },
+            { name: "Makira Natural Park", latlng: [-17.7923, 49.4322] },
+            { name: "Cross-Sanaga-Bioko coastal forests", latlng: [3.9491, 8.7787] },
+            { name: "Knysna-Amatole montane forests", latlng: [-33.9560, 23.0430] },
+            { name: "Virunga Mountains", latlng: [-1.4634, 29.5739] },
+            { name: "Niokolo-Koba National Park", latlng: [13.1333, -12.5667] },
+            { name: "Tropical Rainforest of Atsinanana", latlng: [-19.7354, 48.4773] },
+            { name: "Marojejy National Park", latlng: [-14.4500, 49.8500] },
+            { name: "Aïr and Ténéré Addax Sanctuary", latlng: [18.9667, 8.8333] },
+            { name: "Bia National Park", latlng: [6.3120, -2.4750] },
+            { name: "Aïr Mountains", latlng: [19.0833, 8.3833] },
+            { name: "Kahuzi-Biéga National Park", latlng: [-2.2500, 28.6000] },
+            { name: "Sapo National Park", latlng: [6.5222, -8.5500] },
+            { name: "Ivindo National Park", latlng: [-0.6322, 12.8091] },
+            { name: "Bosawás Biosphere Reserve", latlng: [14.1036, -85.6150] },
+            { name: "Kilum-Ijim Forest", latlng: [5.9667, 9.3333] },
+            { name: "Nouabalé-Ndoki National Park", latlng: [2.1500, 16.7000] },
+            { name: "Kahuzi-Biéga National Park", latlng: [-2.2333, 28.8667] },
+            { name: "Ziama Massif", latlng: [6.7333, -8.6833] },
+            { name: "Boma Plateau Forest", latlng: [-5.8333, 13.2500] },
+            { name: "Mabira Central Forest Reserve", latlng: [0.4283, 32.9794] },
+            { name: "Udzungwa Mountains National Park", latlng: [-7.7667, 36.7500] },
+            { name: "Mau Forest Complex", latlng: [-0.0596, 35.3180] },
+            { name: "Zingg-Drassi Forest", latlng: [8.3150, 10.7736] },
+            { name: "Tongass National Forest", latlng: [58.4389, -135.1311] },
+            { name: "Chugach National Forest", latlng: [60.5281, -149.4819] },
+            { name: "White Mountain National Forest", latlng: [44.1450, -71.4172] },
+            { name: "Green Mountain National Forest", latlng: [43.5239, -73.0233] },
+            { name: "Adirondack Park", latlng: [44.0000, -74.5000] },
+            { name: "Great Bear Rainforest", latlng: [52.2000, -128.1000] },
+            { name: "Olympic National Forest", latlng: [47.7500, -123.7500] },
+            { name: "Redwood National and State Parks", latlng: [41.2136, -124.0043] },
+            { name: "Sierra National Forest", latlng: [37.3254, -119.5611] },
+            { name: "Yosemite National Park", latlng: [37.8651, -119.5383] },
+            { name: "Sequoia National Forest", latlng: [36.0474, -118.6759] },
+            { name: "Joshua Tree National Park", latlng: [33.8734, -115.9010] },
+            { name: "Sawtooth National Recreation Area", latlng: [44.0579, -115.0454] },
+            { name: "Yellowstone National Park", latlng: [44.4279, -110.5885] },
+            { name: "Glacier National Park", latlng: [48.7596, -113.7870] },
+            { name: "Rocky Mountain National Park", latlng: [40.3428, -105.6836] },
+            { name: "Black Hills National Forest", latlng: [43.8041, -103.4068] },
+            { name: "Cherokee National Forest", latlng: [35.7317, -83.4932] },
+            { name: "Great Smoky Mountains National Park", latlng: [35.6532, -83.5070] },
+            { name: "Shenandoah National Park", latlng: [38.2928, -78.6795] },
+            { name: "Monongahela National Forest", latlng: [38.8647, -79.3691] },
+            { name: "Greenbrier State Forest", latlng: [37.9981, -80.7881] },
+            { name: "Blackwater Falls State Park", latlng: [39.1120, -79.4669] },
+            { name: "Great Dismal Swamp National Wildlife Refuge", latlng: [36.6422, -76.4125] },
+            { name: "Congaree National Park", latlng: [33.7945, -80.7819] },
+            { name: "Apalachicola National Forest", latlng: [30.2037, -84.3354] },
+            { name: "Everglades National Park", latlng: [25.2866, -80.8987] },
+            { name: "Big Cypress National Preserve", latlng: [25.9695, -81.0477] },
+            { name: "Sam Houston National Forest", latlng: [30.5499, -95.5347] },
+            { name: "Angelina National Forest", latlng: [31.2182, -94.6626] },
+            { name: "Cibola National Forest", latlng: [35.0539, -107.0459] },
+            { name: "Gila National Forest", latlng: [33.1659, -108.2059] },
+            { name: "Pisgah National Forest", latlng: [35.7992, -82.7589] },
+            { name: "Allegheny National Forest", latlng: [41.7000, -79.2000] },
+            { name: "Custer State Park", latlng: [43.7336, -103.6544] },
+            { name: "Seminole State Park", latlng: [31.8507, -84.9029] },
+            { name: "Mount Rainier National Park", latlng: [46.8800, -121.7269] },
+            { name: "Okanogan-Wenatchee National Forest", latlng: [47.6321, -121.2992] },
+            { name: "Superior National Forest", latlng: [47.9000, -91.8667] },
+            { name: "Voyageurs National Park", latlng: [48.5000, -92.8333] },
+            { name: "Isle Royale National Park", latlng: [48.0000, -88.8333] },
+            { name: "Pictured Rocks National Lakeshore", latlng: [46.5960, -86.0776] },
+            { name: "Hiawatha National Forest", latlng: [45.8833, -86.0000] },
+            { name: "Humboldt Redwoods State Park", latlng: [40.3619, -123.9896] },
+            { name: "Ocala National Forest", latlng: [29.1667, -81.8333] },
+            { name: "Eldorado National Forest", latlng: [38.8697, -120.0181] },
+            { name: "San Gabriel Mountains National Monument", latlng: [34.2984, -117.9329] },
+            { name: "Great Basin National Park", latlng: [38.9833, -114.3000] },
+            { name: "Custer Gallatin National Forest", latlng: [45.1794, -109.2479] },
+            { name: "San Juan National Forest", latlng: [37.8133, -107.5489] },
+            { name: "Coconino National Forest", latlng: [35.6900, -111.7600] },
+            { name: "San Bernardino National Forest", latlng: [34.2000, -116.9100] },
+            { name: "Periyar Wildlife Sanctuary", latlng: [9.5223, 77.1763] },
+            { name: "Bandipur National Park", latlng: [11.6254, 76.6250] },
+            { name: "Nagarhole National Park", latlng: [12.3250, 76.3600] },
+            { name: "Silent Valley National Park", latlng: [11.1347, 76.4230] },
+            { name: "Bhitarkanika Mangroves", latlng: [20.5725, 86.6475] },
+            { name: "Dudhwa National Park", latlng: [28.4654, 80.6946] },
+            { name: "Hemis National Park", latlng: [34.1927, 77.6443] },
+            { name: "Kanger Ghati National Park", latlng: [18.5428, 81.3294] },
+            { name: "Indravati National Park", latlng: [19.4700, 80.2488] },
+            { name: "Buxa Tiger Reserve", latlng: [26.6450, 89.6800] },
+            { name: "Mudumalai National Park", latlng: [11.5589, 76.6568] },
+            { name: "Kalakkad Mundanthurai Tiger Reserve", latlng: [8.6100, 77.3000] },
+            { name: "Sariska Tiger Reserve", latlng: [27.2046, 76.2711] },
+            { name: "Nanda Devi National Park", latlng: [30.4099, 79.5507] },
+            { name: "Great Himalayan National Park", latlng: [31.8754, 77.2223] },
+            { name: "Simlipal National Park", latlng: [21.9333, 86.5000] },
+            { name: "Pench Tiger Reserve", latlng: [21.6804, 79.6563] },
+            { name: "Bannerghatta National Park", latlng: [12.8006, 77.5770] },
+            { name: "Satpura Tiger Reserve", latlng: [21.7645, 78.0560] },
+            { name: "Sathyamangalam Wildlife Sanctuary", latlng: [11.4800, 77.2300] },
+            { name: "Nameri National Park", latlng: [27.0520, 92.7436] },
+            { name: "Mollem National Park", latlng: [15.3000, 74.1500] },
+            { name: "Anshi National Park", latlng: [14.5525, 74.3467] },
+            { name: "Eravikulam National Park", latlng: [10.1550, 77.0550] },
+            { name: "Gulf of Mannar Marine National Park", latlng: [8.7189, 78.2208] },
+            { name: "Kalesar National Park", latlng: [30.2894, 77.3739] },
+            { name: "Betla National Park", latlng: [24.1900, 84.2167] },
+            { name: "Bori Wildlife Sanctuary", latlng: [21.7458, 79.2803] },
+            { name: "Nawegaon National Park", latlng: [20.1883, 79.0878] },
+            { name: "Dibru-Saikhowa National Park", latlng: [27.3325, 95.3200] },
+            { name: "Kishtwar National Park", latlng: [33.3122, 76.7731] },
+            { name: "Kudremukh National Park", latlng: [13.1892, 75.5080] },
+            { name: "Orang National Park", latlng: [26.3825, 92.6667] },
+            { name: "Palamau Tiger Reserve", latlng: [23.8022, 84.3887] },
+            { name: "Panna National Park", latlng: [24.6442, 80.5296] },
+            { name: "Rajaji National Park", latlng: [30.2000, 78.3833] },
+            { name: "Sariska Tiger Reserve", latlng: [27.2046, 76.2711] },
+            { name: "Silvassa Vasona Lion Safari", latlng: [20.2850, 72.9536] },
+            { name: "Navegaon National Park", latlng: [20.1978, 79.3625] },
+            { name: "Gorumara National Park", latlng: [26.7700, 88.7500] },
+            { name: "Balphakram National Park", latlng: [25.1839, 91.5739] },
+            { name: "Similipal National Park", latlng: [21.9333, 86.5000] },
+            { name: "Palamau Tiger Reserve", latlng: [23.8022, 84.3887] },
+            { name: "Rajaji National Park", latlng: [30.2000, 78.3833] },
+            { name: "Silvassa Vasona Lion Safari", latlng: [20.2850, 72.9536] },
+            { name: "Navegaon National Park", latlng: [20.1978, 79.3625] },
+            { name: "Gorumara National Park", latlng: [26.7700, 88.7500] },
+            { name: "Balphakram National Park", latlng: [25.1839, 91.5739] },
+            { name: "Gir Forest National Park", latlng: [21.1629, 70.7967] }
+
+            // Add more forests as needed
+        ];
+
+        function getWeatherData(lat, lng) {
+            // Construct the API URL using the latitude and longitude
+            const apiUrl = `http://api.weatherapi.com/v1/current.json?key=e1dc51e8f91e49dfa5b132223230710&q=${lat},${lng}&aqi=no`;
+
+            // Make the API request to fetch weather data
+            fetch(apiUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Extract temperature, humidity, wind degree, and wind speed from the data
+                    const temperature = data.current.temp_c;
+                    const humidity = data.current.humidity;
+                    const windDegree = data.current.wind_degree;
+                    const windSpeed = data.current.wind_kph;
+
+                    // Construct the data payload to send to your Flask app
+                    const payload = {
+                        temperature: temperature,
+                        humidity: humidity,
+                        windSpeed: windSpeed,
+                        windDegree: windDegree,
+                    };
+
+                    // Make a POST request to your Flask app's endpoint
+                    fetch("http://localhost:5000/predict", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(payload),
+                    })
+                        .then((response) => response.json())
+                        .then((result) => {
+                            // Display the forest fire probability in an alert box
+                            alert(`Forest Fire Probability: ${result.chance}%`);
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching forest fire prediction:", error);
+                        });
+                })
+                .catch((error) => {
+                    console.error("Error fetching weather data:", error);
+                });
+        }
+
+
+
+        // Create markers for each forest and add them to the map
+        forests.forEach(function (forest) {
+            var marker = L.marker(forest.latlng).addTo(map);
+            marker.bindPopup(forest.name).on('click', function () {
+                // When a marker is clicked, call getWeatherData with the coordinates
+                getWeatherData(forest.latlng[0], forest.latlng[1]);
+            });
+        });
+
+    </script>
+</body>
+
+</html>
